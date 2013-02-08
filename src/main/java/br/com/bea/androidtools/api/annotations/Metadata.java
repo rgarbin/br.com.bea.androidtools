@@ -1,4 +1,4 @@
-package br.com.bea.androidtools.annotations;
+package br.com.bea.androidtools.api.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

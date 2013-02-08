@@ -1,4 +1,4 @@
-package br.com.bea.androidtools.model;
+package br.com.bea.androidtools.api.model;
 
 import java.util.Date;
 import android.os.Parcelable;

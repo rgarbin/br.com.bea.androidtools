@@ -1,4 +1,4 @@
-package br.com.bea.androidtools.metadata;
+package br.com.bea.androidtools.api.metadata;
 
 public final class MetadataObject {
     private final String fieldName;

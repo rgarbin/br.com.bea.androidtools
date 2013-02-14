@@ -20,7 +20,7 @@ public abstract class AbstractAsyncTask<E extends ValueObject> extends AsyncTask
 
     @Override
     protected void onPostExecute(final List<E> result) {
-        super.onPostExecute(result);
+        this.resultCallback(result);
     }
 
     @Override

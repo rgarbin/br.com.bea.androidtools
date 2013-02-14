@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import br.com.bea.androidtools.api.annotations.Metadata;
 import br.com.bea.androidtools.api.metadata.MetadataObject;
+import br.com.bea.androidtools.api.model.EntityUtils;
 import br.com.bea.androidtools.api.model.ValueObject;
 
 public class JSONContextImpl<E extends ValueObject> implements JSONContext<E> {
@@ -18,9 +19,8 @@ public class JSONContextImpl<E extends ValueObject> implements JSONContext<E> {
     public JSONContextImpl(final Class<E> targetClass) {
         this.targetClass = targetClass;
         metadata = new LinkedList<MetadataObject>();
-        for (final Field field : targetClass.getDeclaredFields())
-            if (field.isAnnotationPresent(Metadata.class))
-                metadata.add(new MetadataObject(field.getName(), field.getAnnotation(Metadata.class).value()));
+        for (final Field field : EntityUtils.metadataFields(targetClass))
+            metadata.add(new MetadataObject(field.getName(), field.getAnnotation(Metadata.class).value()));
     }
 
     public JSONContextImpl(final List<MetadataObject> metadata, final Class<E> targetClass) {
@@ -35,7 +35,7 @@ public class JSONContextImpl<E extends ValueObject> implements JSONContext<E> {
             for (final MetadataObject mdo : metadata) {
                 final Field field = targetClass.getDeclaredField(mdo.getFieldName());
                 field.setAccessible(true);
-                object.put(mdo.getValue(), field.get(vo));
+                object.put(field.getAnnotation(Metadata.class).value(), field.get(vo));
             }
         } catch (final Exception e) {
             e.printStackTrace();

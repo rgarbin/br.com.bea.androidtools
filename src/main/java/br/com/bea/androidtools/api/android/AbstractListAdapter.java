@@ -9,7 +9,7 @@ import br.com.bea.androidtools.api.model.ValueObject;
 
 public abstract class AbstractListAdapter<E extends ValueObject> extends BaseAdapter {
 
-    private final LayoutInflater inflater;
+    protected final LayoutInflater inflater;
     private final List<E> list = new ArrayList<E>(0);
 
     public AbstractListAdapter(final LayoutInflater inflater) {
@@ -34,13 +34,14 @@ public abstract class AbstractListAdapter<E extends ValueObject> extends BaseAda
     }
 
     @Override
-    public Object getItem(final int position) {
+    public E getItem(final int position) {
         return list.get(position);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public long getItemId(final int position) {
         final E e = list.get(position);
-        return e instanceof Entity ? ((Integer) ((Entity) e).getId()).longValue() : position;
+        return e instanceof Entity ? ((Entity<Integer>) e).getId().longValue() : position;
     }
 }

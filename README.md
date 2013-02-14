@@ -100,7 +100,7 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
 </pre>
 
 <h2>Using an AsyncTask using AbstractAsyncTask into a ListActivity</h2>
-<h3>The</h3>
+<h3>To take advantage resultCallback feature, create the AsyncTask inside a ListActivity</h3>
 <pre>
 <code>public class ExampleActivity extends ListActivity {
 
@@ -108,7 +108,7 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         final ExampleListAdapter listAdapter = 
-                        new ExampleListAdapter((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));        
+                        new ExampleListAdapter((LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE));
         new AbstractAsyncTask<EventEntity>(EventService.getInstance()) {
             @Override
             public void resultCallback(final List<EventEntity> result) {

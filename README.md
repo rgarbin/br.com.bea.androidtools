@@ -1,5 +1,8 @@
 Android Tools
 =======================
+<h4>Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android</h4>
+<p>Arquitetura: [@brunojensen](@brunojensen).</p>
+<p>Colaboradores: [@rgarbin](@rgarbin) e [@odiego](@odiego).</p>
 
 <h2>Model</h2>
 <h4>JSON and ORM Mapping</h4>

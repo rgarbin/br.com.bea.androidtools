@@ -127,5 +127,5 @@ This project is released under the [MIT License](http://www.opensource.org/licen
 
 ## Contributing
 
-We welcome contributions!
+Please fork this repository and contribute back using pull requests.
 

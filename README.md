@@ -128,3 +128,7 @@ public class ExampleActivity extends ListActivity {
 
 This project is released under the [MIT License](http://www.opensource.org/licenses/MIT).
 
+## Contributing
+
+We welcome contributions!
+

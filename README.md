@@ -3,9 +3,6 @@ Android Tools
 
 Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
 
-Arquitetura: [@brunojensen](@brunojensen)
-Colaboradores: [@rgarbin](@rgarbin) e [@odiego](@odiego).
-
 ## Model
 **JSON and ORM Mapping**
 ```java

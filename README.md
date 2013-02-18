@@ -126,6 +126,5 @@ public class ExampleActivity extends ListActivity {
 ```
 ## License
 
-This project is released under the {MIT License}[http://www.opensource.org/licenses/MIT].
-
+This project is released under the [MIT License}](http://www.opensource.org/licenses/MIT).
 

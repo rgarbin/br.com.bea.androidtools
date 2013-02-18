@@ -3,7 +3,7 @@ Android Tools
 
 Info: Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
 
-Author: Bruno Jensen
+Author: Bruno Jensen(https://github.com/brunojensen)
 
 Contribuição: Diego Nunes(https://github.com/odiego), Rafael Garbin(https://github.com/rgarbin)
 

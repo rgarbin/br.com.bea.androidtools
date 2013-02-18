@@ -1,14 +1,16 @@
 Android Tools
-=======================
-<h4>Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android</h4>
-Arquitetura: [@brunojensen](@brunojensen).<br />
+=============
+
+Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
+
+Arquitetura: [@brunojensen](@brunojensen)
 Colaboradores: [@rgarbin](@rgarbin) e [@odiego](@odiego).
 
-<h2>Model</h2>
-<h4>JSON and ORM Mapping</h4>
-<pre>
-<code>@Table(name="TB_EXAMPLE")
-public final class ExampleEntity extends Entity&#60;Integer&#62; {
+## Model
+**JSON and ORM Mapping**
+```java
+@Table(name="TB_EXAMPLE")
+public final class ExampleEntity extends Entity<Integer> {
 
     @Metadata("id") // for JSON
     @Id
@@ -19,18 +21,18 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
     @Column(name="NM_EXAMPLE", type="VARCHAR(200)")
     private String name;
     ...
-}</code>
-</pre>
+}
+```
 
-<h2>Service</h2>
-<h4>Implementation of a ExampleService that use JSONCOntext and Proxy to request and manipulate data.</h4>
-<pre>
-<code>public final class ExampleService extends Service&#60;ExampleEntity&#62; {
-    private static final Service&#60;ExampleEntity&#62; INSTANCE = new ExampleService();
+## Service
+**Implementation of a ExampleService that use JSONCOntext and Proxy to request and manipulate data.**
+```java
+public final class ExampleService extends Service<ExampleEntity> {
+    private static final Service<ExampleEntity> INSTANCE = new ExampleService();
     
     private ExampleService() {}
     
-    public Service&#60;ExampleEntity&#62; getInstance() {
+    public Service<ExampleEntity> getInstance() {
         return INSTANCE;
     }
     
@@ -40,9 +42,9 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
     @Override
     public List<ExampleEntity> search(final ExampleEntity entity) {
         // Create a proxy instance
-        final Proxy&#60;JSONArray&#62; appProxy = new AppProxy();
+        final Proxy<JSONArray> appProxy = new AppProxy();
         // Create the result
-        final List&#60;ExampleEntity&#62; result = new LinkedList&#60;ExampleEntity&#62;();
+        final List<ExampleEntity> result = new LinkedList<ExampleEntity>();
         try {
             // Create properties instance with Proxy connection parameters
             final Properties properties = new Properties();
@@ -51,7 +53,7 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
             // Initiate a connection
             appProxy.connect(properties);
             // Create a JSONContext instance for ExampleEntity
-            final JSONContext&#60;ExampleEntity&#62; jsonContext = new JSONContextImpl&#60;ExampleEntity&#62;(ExampleEntity.class);
+            final JSONContext<ExampleEntity> jsonContext = new JSONContextImpl<ExampleEntity>(ExampleEntity.class);
             // Send a request to the appProxy which return a List of JSONArray
             for (JSONArray array : appProxy.request(null))
                 result.addAll(jsonContext.unmarshal(array)); // Unmarshal each JSONArray into a Collection 
@@ -68,13 +70,13 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
     public ExampleEntity find(final ExampleEntity entity) { ... }
     
     ...
-}</code>
-</pre>
+}
+```
 
-<h2>Create an Adapter using AbstractListAdapter</h2>
-<h4>There is a way to create an Adapter using best practices.</h4>
-<pre>
-<code>public final class ExampleListAdapter extends AbstractListAdapter&#60;ExampleEntity&#62; {
+## Create an Adapter using AbstractListAdapter
+**There is a way to create an Adapter using best practices.**
+```java
+public final class ExampleListAdapter extends AbstractListAdapter<ExampleEntity> {
     public ExampleListAdapter(final LayoutInflater inflater) {
         super(inflater);
     }
@@ -99,13 +101,13 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
         holder.label.setText(getItem(position).getName());
         return layout;
     }
-}</code>
-</pre>
+}
+```
 
-<h2>Using an AsyncTask using AbstractAsyncTask into a ListActivity</h2>
-<h3>To take advantage resultCallback feature, create the AsyncTask inside a ListActivity</h3>
-<pre>
-<code>public class ExampleActivity extends ListActivity {
+## Using an AsyncTask using AbstractAsyncTask into a ListActivity
+**To take advantage resultCallback feature, create the AsyncTask inside a ListActivity**
+```java
+public class ExampleActivity extends ListActivity {
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -120,8 +122,10 @@ public final class ExampleEntity extends Entity&#60;Integer&#62; {
             }
         }.execute();
     }
-}</code>
-</pre>
+}
+```
+== License
 
+This project is released under the {MIT License}[http://www.opensource.org/licenses/MIT].
 
 

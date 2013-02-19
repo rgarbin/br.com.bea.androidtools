@@ -1,12 +1,13 @@
 Android Tools
 =============
+**Project designed to accelerate the development of android apps.**
 
-Info: Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
-
+<p>
 Author: Bruno Jensen (https://github.com/brunojensen)
-
-Contribuição: Diego Nunes (https://github.com/odiego), Rafael Garbin (https://github.com/rgarbin)
-
+</p>
+<p>
+Collaborators: Diego Nunes (https://github.com/odiego), Rafael Garbin (https://github.com/rgarbin)
+</p>
 ## How to use in my android project?
 
 Add br.com.bea.androidtools as Maven dependency:

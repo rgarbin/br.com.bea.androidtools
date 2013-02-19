@@ -3,9 +3,35 @@ Android Tools
 
 Info: Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
 
-Author: Bruno Jensen(https://github.com/brunojensen)
+Author: Bruno Jensen (https://github.com/brunojensen)
 
-Contribuição: Diego Nunes(https://github.com/odiego), Rafael Garbin(https://github.com/rgarbin)
+Contribuição: Diego Nunes (https://github.com/odiego), Rafael Garbin (https://github.com/rgarbin)
+
+## How to use in my android project?
+
+Add br.com.bea.androidtools as Maven dependency:
+
+```xml
+...
+<dependencies>
+...
+    <dependency>
+        <groupId>br.com.bea.androidtools</groupId>
+        <artifactId>br.com.bea.androidtools</artifactId>
+        <version>0.0.1</version>
+        <type>apklib</type>
+    </dependency>
+...
+</dependencies>
+...
+```
+You also can add as a module in your parent pom:
+
+```xml
+<modules>
+    <module>br.com.bea.androidtools</module>
+</modules>
+```
 
 
 ## Model
@@ -75,7 +101,7 @@ public final class ExampleService extends Service<ExampleEntity> {
 }
 ```
 
-## Create an Adapter using AbstractListAdapter
+## View: Adapter
 **There is a way to create an Adapter using best practices.**
 ```java
 public final class ExampleListAdapter extends AbstractListAdapter<ExampleEntity> {
@@ -106,7 +132,7 @@ public final class ExampleListAdapter extends AbstractListAdapter<ExampleEntity>
 }
 ```
 
-## Using an AsyncTask using AbstractAsyncTask into a ListActivity
+## View: AsyncTask
 **To take advantage resultCallback feature, create the AsyncTask inside a ListActivity**
 ```java
 public class ExampleActivity extends ListActivity {

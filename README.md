@@ -53,7 +53,7 @@ public final class ExampleEntity extends Entity<Integer> {
 }
 ```
 ## Database Access
-**Implementation of a Database using SQlite. **
+**Implementation of a Database using SQlite.**
 ```java
 ...
 EntityManagerImpl.getInstance().init(this, "DATABASE_NAME", ExampleEntity.class
@@ -70,7 +70,7 @@ EntityManagerImpl.getInstance().<ExampleEntity>search( ... );
 
 ```
 ## QueryBuilder
-** Easy and intuitive way to build your query **
+**Easy and intuitive way to build your query.**
 ```java
 ...
 QueryBuilder.select()

@@ -1,7 +1,12 @@
 Android Tools
 =============
 
-Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
+Info: Projeto desenvolvido para acelerar o processo de desenvolvimento de softwares para android.
+
+Author: Bruno Jensen(https://github.com/brunojensen)
+
+Contribuição: Diego Nunes(https://github.com/odiego), Rafael Garbin(https://github.com/rgarbin)
+
 
 ## Model
 **JSON and ORM Mapping**

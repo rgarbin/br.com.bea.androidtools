@@ -51,6 +51,33 @@ public final class ExampleEntity extends Entity<Integer> {
     ...
 }
 ```
+## Database Access
+**Implementation of a Database using SQlite. **
+```java
+...
+EntityManagerImpl.getInstance().init(this, "DATABASE_NAME", ExampleEntity.class
+                                                          , Example2Entity.class
+                                                          , Example3Entity.class);
+...
+
+EntityManagerImpl.getInstance().<ExampleEntity>find( ... );
+EntityManagerImpl.getInstance().<ExampleEntity>persist( ... );
+EntityManagerImpl.getInstance().<ExampleEntity>update( ... );
+EntityManagerImpl.getInstance().<ExampleEntity>delete( ... );
+EntityManagerImpl.getInstance().<ExampleEntity>search( ... );
+...
+
+```
+## QueryBuilder
+** Easy and intuitive way to build your query **
+```java
+...
+QueryBuilder.select()
+            .from(EventEntity.class)
+            .where( Restriction.like("name", "Frank", MatchMode.ANYWHERE) )
+            .orderBy("id", "name");
+...
+```
 
 ## Service
 **Implementation of a ExampleService that use JSONCOntext and Proxy to request and manipulate data.**

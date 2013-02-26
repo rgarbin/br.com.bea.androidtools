@@ -23,7 +23,7 @@
                 <artifactId>br.com.bea.androidtools</artifactId>
                 <version>${project.version}</version>
             </dependency>
-             <dependency>
+            <dependency>
                 <groupId>com.google.android</groupId>
                 <artifactId>support-v4</artifactId>
                 <version>r7</version>
@@ -37,18 +37,6 @@
         </dependencies>
     </dependencyManagement>
     <build>
-        <resources>
-            <resource>
-                <directory>scr/main</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-            </plugin>
-        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
@@ -58,7 +46,7 @@
                     <configuration>
                         <source>1.6</source>
                         <target>1.6</target>
-<!--                         <compilerId>eclipse</compilerId> -->
+                        <!-- <compilerId>eclipse</compilerId> -->
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -82,7 +70,7 @@
                 <plugin>
                     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
                     <artifactId>android-maven-plugin</artifactId>
-                    <version>3.5.0</version>
+                    <version>3.5.1</version>
                     <extensions>true</extensions>
                     <configuration>
                         <androidManifestFile>${project.basedir}/AndroidManifest.xml</androidManifestFile>
@@ -108,6 +96,20 @@
                             <phase>install</phase>
                             <goals>
                                 <goal>deploy</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-proguard</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>proguard</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>default-generate-sources</id>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>generate-sources</goal>
                             </goals>
                         </execution>
                     </executions>

@@ -44,7 +44,7 @@ public class EntityManagerImpl implements EntityManager {
     private static SQlite sqlite;
 
     public static EntityManager getInstance() {
-        return INSTANCE;
+        return EntityManagerImpl.INSTANCE;
     }
 
     private EntityManagerImpl() {
@@ -52,14 +52,15 @@ public class EntityManagerImpl implements EntityManager {
 
     @Override
     public void close() {
-        sqlite.close();
+        EntityManagerImpl.sqlite.close();
     }
 
     private Object convert(final Field field, final Cursor cursor) throws Exception {
         if (field.getType().equals(Integer.class))
             return cursor.getInt(cursor.getColumnIndex(field.getAnnotation(Column.class).name()));
         if (field.getType().equals(Date.class))
-            return DATE_FORMAT.parse(cursor.getString(cursor.getColumnIndex(field.getAnnotation(Column.class).name())));
+            return EntityManagerImpl.DATE_FORMAT.parse(cursor.getString(cursor.getColumnIndex(field
+                .getAnnotation(Column.class).name())));
         return cursor.getString(cursor.getColumnIndex(field.getAnnotation(Column.class).name()));
     }
 
@@ -77,8 +78,9 @@ public class EntityManagerImpl implements EntityManager {
                 }
             }
             if (id == 0) throw new SQLiteException("Entidade não possui Id");
-            sqlite.getWritableDatabase().delete(entity.getClass().getAnnotation(Table.class).name(),
-                                                String.format("%s = ? ", idColumn), new String[] { id.toString() });
+            EntityManagerImpl.sqlite.getWritableDatabase().delete(entity.getClass().getAnnotation(Table.class).name(),
+                                                                  String.format("%s = ? ", idColumn),
+                                                                  new String[] { id.toString() });
         } catch (final Exception e) {
             throw new SQLiteException(e.getLocalizedMessage());
         }
@@ -91,10 +93,13 @@ public class EntityManagerImpl implements EntityManager {
             for (final Field field : EntityUtils.columnFields(entity.getClass()))
                 columns.add(field.getAnnotation(Column.class).name());
 
-            final Cursor cursor = sqlite.getReadableDatabase().query(entity.getClass().getAnnotation(Table.class)
-                                                                         .name(),
-                                                                     columns.toArray(new String[columns.size()]), null,
-                                                                     null, null, null, null);
+            final Cursor cursor = EntityManagerImpl.sqlite.getReadableDatabase().query(entity.getClass()
+                                                                                           .getAnnotation(Table.class)
+                                                                                           .name(),
+                                                                                       columns
+                                                                                           .toArray(new String[columns
+                                                                                               .size()]), null, null,
+                                                                                       null, null, null);
             @SuppressWarnings("unchecked")
             final E value = (E) entity.getClass().newInstance();
             if (cursor.moveToFirst()) while (cursor.moveToNext())
@@ -112,7 +117,7 @@ public class EntityManagerImpl implements EntityManager {
     public <E extends Entity<?>> EntityManager init(final Context context,
                                                     final String database,
                                                     final List<Class<E>> targetClasses) {
-        sqlite = new SQlite<E>(context, database, targetClasses);
+        EntityManagerImpl.sqlite = new SQlite<E>(context, database, targetClasses);
         return this;
     }
 
@@ -124,7 +129,8 @@ public class EntityManagerImpl implements EntityManager {
                 field.setAccessible(true);
                 values.put(field.getAnnotation(Column.class).name(), String.valueOf(field.get(entity)));
             }
-            sqlite.getWritableDatabase().insert(entity.getClass().getAnnotation(Table.class).name(), null, values);
+            EntityManagerImpl.sqlite.getWritableDatabase().insert(entity.getClass().getAnnotation(Table.class).name(),
+                                                                  null, values);
         } catch (final Exception e) {
             throw new SQLiteException(e.getLocalizedMessage());
         }
@@ -135,7 +141,7 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public <E extends Entity<?>> List<E> search(final QueryBuilder query) {
         final List<E> result = new LinkedList<E>();
-        final Cursor cursor = query.build(sqlite.getReadableDatabase());
+        final Cursor cursor = query.build(EntityManagerImpl.sqlite.getReadableDatabase());
         if (cursor.moveToFirst()) while (cursor.moveToNext())
             try {
                 final E value = (E) query.getTargetClass().newInstance();
@@ -166,8 +172,9 @@ public class EntityManagerImpl implements EntityManager {
                 }
             }
             if (id == 0) throw new SQLiteException("Entidade não possui Id");
-            sqlite.getWritableDatabase().update(entity.getClass().getAnnotation(Table.class).name(), values,
-                                                String.format("%s = ? ", idColumn), new String[] { id.toString() });
+            EntityManagerImpl.sqlite.getWritableDatabase().update(entity.getClass().getAnnotation(Table.class).name(),
+                                                                  values, String.format("%s = ? ", idColumn),
+                                                                  new String[] { id.toString() });
         } catch (final Exception e) {
             throw new SQLiteException(e.getLocalizedMessage());
         }

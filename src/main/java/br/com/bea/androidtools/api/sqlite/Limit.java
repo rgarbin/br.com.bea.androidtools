@@ -21,23 +21,27 @@ package br.com.bea.androidtools.api.sqlite;
 
 public class Limit {
 
-    private Long numeroPagina;
+    private Long firstResult;
 
-    private Long tamanhoPagina;
+    private Long maxResult;
 
-    public Long getNumeroPagina() {
-        return numeroPagina;
+    public Long getFirstResult() {
+        return firstResult;
     }
 
-    public Long getTamanhoPagina() {
-        return tamanhoPagina;
+    public Long getMaxResult() {
+        return maxResult;
     }
 
-    public void setNumeroPagina(final Long numeroPagina) {
-        this.numeroPagina = numeroPagina;
+    public boolean isEmpty() {
+        return null == firstResult || null == maxResult;
     }
 
-    public void setTamanhoPagina(final Long tamanhoPagina) {
-        this.tamanhoPagina = tamanhoPagina;
+    public void setFirstResult(final Long firstResult) {
+        this.firstResult = firstResult;
+    }
+
+    public void setMaxResult(final Long maxResult) {
+        this.maxResult = maxResult;
     }
 }

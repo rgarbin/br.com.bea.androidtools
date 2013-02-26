@@ -23,11 +23,8 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import br.com.bea.androidtools.api.annotations.Column;
@@ -41,26 +38,46 @@ public final class QueryBuilder {
         return new QueryBuilder();
     }
 
+    private final List<String> groupBy = new LinkedList<String>();
+    private final Limit limit = new Limit();
     private final List<String> orderBy = new LinkedList<String>();
-    private final Map<String, Object> selection = new LinkedHashMap<String, Object>(0);
+    private final List<Criteria> selection = new LinkedList<Criteria>();
     private Class<?> targetClass;
 
     private QueryBuilder() {
     }
 
-    @SuppressWarnings("unchecked")
     Cursor build(final SQLiteDatabase sqlite) {
+        return sqlite.query(true, targetClass.getAnnotation(Table.class).name(), buildColumns(), buildSelection(),
+                            selectionValues(), buildGroupBy(), null, buildOrderBy(), buildLimit(), null);
+    }
+
+    @SuppressWarnings("unchecked")
+    private String[] buildColumns() {
         final List<String> columns = new ArrayList<String>(0);
         for (final Field field : EntityUtils.columnFields((Class<Entity<?>>) targetClass))
             if (field.isAnnotationPresent(Column.class)) columns.add(field.getAnnotation(Column.class).name());
+        return columns.toArray(new String[columns.size()]);
+    }
 
-        return sqlite.query(targetClass.getAnnotation(Table.class).name(), columns.toArray(new String[columns.size()]),
-                            buildSelection(), selection.size() > 0 ? selection.values().toArray(new String[selection
-                                                                                                    .size()]) : null,
-                            null, null, buildOrderBy());
+    private String buildGroupBy() {
+        if (groupBy.isEmpty()) return null;
+        final StringBuilder builder = new StringBuilder();
+        for (final Iterator<String> iterator = groupBy.iterator(); iterator.hasNext();) {
+            builder.append(iterator.next());
+            if (iterator.hasNext()) builder.append(", ");
+        }
+        return builder.toString();
+    }
+
+    private String buildLimit() {
+        if (limit.isEmpty()) return null;
+        final StringBuilder builder = new StringBuilder();
+        return builder.append(limit.getFirstResult()).append(", ").append(limit.getMaxResult()).toString();
     }
 
     private String buildOrderBy() {
+        if (orderBy.isEmpty()) return null;
         final StringBuilder builder = new StringBuilder();
         for (final Iterator<String> iterator = orderBy.iterator(); iterator.hasNext();) {
             builder.append(iterator.next());
@@ -70,10 +87,11 @@ public final class QueryBuilder {
     }
 
     private String buildSelection() {
+        if (selection.isEmpty()) return null;
         final StringBuilder builder = new StringBuilder();
-        for (final Iterator<Entry<String, Object>> iterator = selection.entrySet().iterator(); iterator.hasNext();) {
-            final Entry<String, Object> entry = iterator.next();
-            builder.append(entry.getKey()).append(" = ? ");
+        for (final Iterator<Criteria> iterator = selection.iterator(); iterator.hasNext();) {
+            final Criteria criteria = iterator.next();
+            criteria.buildQuery(builder);
             if (iterator.hasNext()) builder.append(", ");
         }
         return builder.toString();
@@ -88,14 +106,50 @@ public final class QueryBuilder {
         return targetClass;
     }
 
-    public QueryBuilder orderBy(final String order, final String... orders) {
-        orderBy.add(order);
-        orderBy.addAll(Arrays.asList(orders));
+    public QueryBuilder groupBy(final String property, final String... properties) {
+        groupBy.add(property);
+        groupBy.addAll(Arrays.asList(properties));
         return this;
     }
 
-    public QueryBuilder whereEquals(final String name, final Object value) {
-        selection.put(name, value);
+    public QueryBuilder limit(final Long firstResult, final Long maxResult) {
+        limit.setFirstResult(firstResult);
+        limit.setMaxResult(maxResult);
+        return this;
+    }
+
+    public QueryBuilder orderBy(final String property, final String... properties) {
+        orderBy.add(property);
+        orderBy.addAll(Arrays.asList(properties));
+        return this;
+    }
+
+    private String[] selectionValues() {
+        if (selection.isEmpty()) return null;
+        final List<String> values = new LinkedList<String>();
+        for (final Criteria criteria : selection) {
+            values.addAll(criteria.getValues());
+        }
+        return values.toArray(new String[values.size()]);
+    }
+
+    @Override
+    public String toString() {
+        return new StringBuilder().append(true).append("\n").append(targetClass.getAnnotation(Table.class).name())
+            .append("\n").append(Arrays.toString(buildColumns())).append("\n").append(buildSelection()).append("\n")
+            .append(Arrays.toString(selectionValues())).append("\n").append(buildGroupBy()).append("\n").append("")
+            .append("\n").append(buildOrderBy()).append("\n").append(buildLimit()).toString();
+    }
+
+    public QueryBuilder where(final Criteria... criteria) {
+        selection.clear();
+        selection.addAll(Arrays.asList(criteria));
+        return this;
+    }
+
+    public QueryBuilder where(final List<Criteria> criteria) {
+        selection.clear();
+        selection.addAll(criteria);
         return this;
     }
 }

@@ -53,7 +53,5 @@ public interface Criteria {
 
     StringBuilder buildQuery(final StringBuilder builder);
 
-    List<Object> getValues();
-
-    void translate(final List<Class<?>> classes);
+    List<String> getValues();
 }

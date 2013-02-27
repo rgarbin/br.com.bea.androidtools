@@ -39,7 +39,7 @@ public class JSONContextImpl<E extends ValueObject> implements JSONContext<E> {
         this.targetClass = targetClass;
         metadata = new LinkedList<MetadataObject>();
         for (final Field field : EntityUtils.metadataFields(targetClass))
-            metadata.add(new MetadataObject(field.getName(), field.getAnnotation(Metadata.class).value()));
+            metadata.add(new MetadataObject(field, field.getAnnotation(Metadata.class).value()));
     }
 
     public JSONContextImpl(final List<MetadataObject> metadata, final Class<E> targetClass) {
@@ -52,9 +52,10 @@ public class JSONContextImpl<E extends ValueObject> implements JSONContext<E> {
         final JSONObject object = new JSONObject();
         try {
             for (final MetadataObject mdo : metadata) {
-                final Field field = targetClass.getDeclaredField(mdo.getFieldName());
+                final Field field = targetClass.getDeclaredField(mdo.getField().getName());
                 field.setAccessible(true);
-                object.put(field.getAnnotation(Metadata.class).value(), field.get(vo));
+                final Object value = field.get(vo);
+                object.put(field.getAnnotation(Metadata.class).value(), null == value ? JSONObject.NULL : value);
             }
         } catch (final Exception e) {
             e.printStackTrace();
@@ -70,9 +71,9 @@ public class JSONContextImpl<E extends ValueObject> implements JSONContext<E> {
                 final JSONObject object = (JSONObject) value.get(i);
                 final E vo = targetClass.newInstance();
                 for (final MetadataObject mdo : metadata) {
-                    final Field field = targetClass.getDeclaredField(mdo.getFieldName());
+                    final Field field = targetClass.getDeclaredField(mdo.getField().getName());
                     field.setAccessible(true);
-                    field.set(vo, object.get(mdo.getValue()));
+                    field.set(vo, object.isNull(mdo.getValue()) ? null : EntityUtils.convert(mdo.getField(), object));
                 }
                 result.add(vo);
             }

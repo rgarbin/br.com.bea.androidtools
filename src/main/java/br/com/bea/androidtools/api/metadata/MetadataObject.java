@@ -19,17 +19,19 @@ IN THE SOFTWARE.
 
 package br.com.bea.androidtools.api.metadata;
 
+import java.lang.reflect.Field;
+
 public final class MetadataObject {
-    private final String fieldName;
+    private final Field field;
     private final String value;
 
-    public MetadataObject(final String fieldName, final String value) {
-        this.fieldName = fieldName;
+    public MetadataObject(final Field field, final String value) {
+        this.field = field;
         this.value = value;
     }
 
-    public String getFieldName() {
-        return fieldName;
+    public Field getField() {
+        return field;
     }
 
     public String getValue() {

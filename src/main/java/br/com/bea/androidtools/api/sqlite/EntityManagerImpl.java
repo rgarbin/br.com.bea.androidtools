@@ -20,10 +20,7 @@ IN THE SOFTWARE.
 package br.com.bea.androidtools.api.sqlite;
 
 import java.lang.reflect.Field;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import android.content.ContentValues;
@@ -38,7 +35,6 @@ import br.com.bea.androidtools.api.model.EntityUtils;
 
 public class EntityManagerImpl implements EntityManager {
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("dd/MM/yyyy");
     private static final EntityManager INSTANCE = new EntityManagerImpl();
     @SuppressWarnings("rawtypes")
     private static SQlite sqlite;
@@ -55,28 +51,18 @@ public class EntityManagerImpl implements EntityManager {
         EntityManagerImpl.sqlite.close();
     }
 
-    private Object convert(final Field field, final Cursor cursor) throws Exception {
-        if (field.getType().equals(Integer.class))
-            return cursor.getInt(cursor.getColumnIndex(field.getAnnotation(Column.class).name()));
-        if (field.getType().equals(Date.class))
-            return EntityManagerImpl.DATE_FORMAT.parse(cursor.getString(cursor.getColumnIndex(field
-                .getAnnotation(Column.class).name())));
-        return cursor.getString(cursor.getColumnIndex(field.getAnnotation(Column.class).name()));
-    }
-
     @Override
     public <E extends Entity<?>> void delete(final E entity) {
         try {
             String idColumn = null;
             Integer id = 0;
-            for (final Field field : EntityUtils.columnFields(entity.getClass())) {
+            for (final Field field : EntityUtils.columnFields(entity.getClass()))
                 if (field.isAnnotationPresent(Id.class)) {
                     field.setAccessible(true);
                     idColumn = field.getAnnotation(Column.class).name();
                     id = (Integer) field.get(entity);
                     break;
                 }
-            }
             if (id == 0) throw new SQLiteException("Entidade não possui Id");
             EntityManagerImpl.sqlite.getWritableDatabase().delete(entity.getClass().getAnnotation(Table.class).name(),
                                                                   String.format("%s = ? ", idColumn),
@@ -105,7 +91,7 @@ public class EntityManagerImpl implements EntityManager {
             if (cursor.moveToFirst()) while (cursor.moveToNext())
                 for (final Field field : EntityUtils.columnFields(entity.getClass())) {
                     field.setAccessible(true);
-                    field.set(value, convert(field, cursor));
+                    field.set(value, EntityUtils.convert(field, cursor));
                 }
             return value;
         } catch (final Exception e) {
@@ -147,7 +133,7 @@ public class EntityManagerImpl implements EntityManager {
                 final E value = (E) query.getTargetClass().newInstance();
                 for (final Field field : EntityUtils.columnFields((Class<E>) query.getTargetClass())) {
                     field.setAccessible(true);
-                    field.set(value, convert(field, cursor));
+                    field.set(value, EntityUtils.convert(field, cursor));
                 }
                 result.add(value);
             } catch (final Exception e) {

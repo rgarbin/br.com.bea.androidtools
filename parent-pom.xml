@@ -12,7 +12,8 @@
         <module>br.com.bea.androidtools</module>
     </modules>
     <properties>
-        <plataform.version>17</plataform.version>
+        <platform.version>17</platform.version>
+        <platform.path>${android.platform.path}</platform.path>
         <project.uuid>${project.groupId}.${project.artifactId}</project.uuid>
         <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
     </properties>
@@ -77,8 +78,8 @@
                         <assetsDirectory>${project.basedir}/assets</assetsDirectory>
                         <resourceDirectory>${project.basedir}/res</resourceDirectory>
                         <sdk>
-                            <path>/home/brunojensen/Applications/android/sdk</path>
-                            <platform>${plataform.version}</platform>
+                            <path>${platform.path}</path>
+                            <platform>${platform.version}</platform>
                         </sdk>
                         <undeployBeforeDeploy>true</undeployBeforeDeploy>
                         <jvmArguments>

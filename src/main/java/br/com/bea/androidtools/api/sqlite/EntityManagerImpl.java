@@ -20,7 +20,6 @@ IN THE SOFTWARE.
 package br.com.bea.androidtools.api.sqlite;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import android.content.ContentValues;
@@ -75,25 +74,19 @@ public class EntityManagerImpl implements EntityManager {
     @Override
     public <E extends Entity<?>> E find(final E entity) {
         try {
-            final List<String> columns = new ArrayList<String>(0);
-            for (final Field field : EntityUtils.columnFields(entity.getClass()))
-                columns.add(field.getAnnotation(Column.class).name());
-
-            final Cursor cursor = EntityManagerImpl.sqlite.getReadableDatabase().query(entity.getClass()
-                                                                                           .getAnnotation(Table.class)
-                                                                                           .name(),
-                                                                                       columns
-                                                                                           .toArray(new String[columns
-                                                                                               .size()]), null, null,
-                                                                                       null, null, null);
-            @SuppressWarnings("unchecked")
-            final E value = (E) entity.getClass().newInstance();
-            if (cursor.moveToFirst()) while (cursor.moveToNext())
+            final Cursor cursor = QueryBuilder.select().from(entity.getClass()).where(Restriction.eq("id", entity
+                                                                                          .getId()))
+                .build(EntityManagerImpl.sqlite.getReadableDatabase());
+            if (cursor.moveToFirst()) {
+                @SuppressWarnings("unchecked")
+                final E value = (E) entity.getClass().newInstance();
                 for (final Field field : EntityUtils.columnFields(entity.getClass())) {
                     field.setAccessible(true);
                     field.set(value, EntityUtils.convert(field, cursor));
                 }
-            return value;
+                return value;
+            }
+            return null;
         } catch (final Exception e) {
             throw new SQLiteException(e.getLocalizedMessage());
         }
@@ -128,7 +121,7 @@ public class EntityManagerImpl implements EntityManager {
     public <E extends Entity<?>> List<E> search(final QueryBuilder query) {
         final List<E> result = new LinkedList<E>();
         final Cursor cursor = query.build(EntityManagerImpl.sqlite.getReadableDatabase());
-        if (cursor.moveToFirst()) while (cursor.moveToNext())
+        if (cursor.moveToFirst()) do
             try {
                 final E value = (E) query.getTargetClass().newInstance();
                 for (final Field field : EntityUtils.columnFields((Class<E>) query.getTargetClass())) {
@@ -136,10 +129,11 @@ public class EntityManagerImpl implements EntityManager {
                     field.set(value, EntityUtils.convert(field, cursor));
                 }
                 result.add(value);
+
             } catch (final Exception e) {
                 throw new SQLiteException(e.getLocalizedMessage());
             }
-
+        while (cursor.moveToNext());
         return result;
     }
 

@@ -61,6 +61,6 @@ public abstract class AbstractListAdapter<E extends ValueObject> extends BaseAda
     @Override
     public long getItemId(final int position) {
         final E e = list.get(position);
-        return e instanceof Entity ? ((Entity<Integer>) e).getId().longValue() : position;
+        return e instanceof Entity ? ((Entity<Number>) e).getId().longValue() : position;
     }
 }

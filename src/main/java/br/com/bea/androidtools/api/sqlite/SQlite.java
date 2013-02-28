@@ -53,7 +53,6 @@ class SQlite<E extends Entity<?>> extends SQLiteOpenHelper {
                 if (iterator.hasNext()) builder.append(", ");
             }
             builder.append(");");
-            System.out.println(builder.toString());
             db.execSQL(builder.toString());
         }
     }
